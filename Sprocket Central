@@ -1,0 +1,34 @@
+# RFM Analysis is a marketing technique used to analyze customer behavior based on 3 factors : 
+# R: Recency 
+# F: Frequency
+# M: monetary value
+# And by analyzing these factors, business can gain insights into their customers’ behavior and tailor marketing strategies accordingly.
+
+-- SQL code : 
+declare @today_date as Date = '2018-01-01';
+with cte 
+as
+(select t.customer_id , max ( t.transaction_date) as [most recently purchases date],
+DATEDIFF ( DAY , max ( t.transaction_date) , @today_date) as [recency score] ,
+count (t.transaction_id) as [frequency score],
+sum(p.list_price - p.standard_cost ) as [monetary score]
+from [dbo].[Transactions$] t ,[dbo].[Products$] p 
+group by t.customer_id 
+),
+
+RFM_Scores as 
+(
+select customer_id , [recency score] ,[frequency score],[monetary score],
+NTILE(5) over (order by [recency score] desc) as R ,
+NTILE(5) over (order by [frequency score] asc) as F,
+NTILE(5) over (order by [monetary score] asc) as M
+from cte )
+,
+
+RFM_ranking as
+(
+select customer_id, CONCAT_WS('/',R,F,M) as RFM_values , cast((cast(R as float)+F+M)/3 as decimal(16,2)) as RFM_AVG_Value
+from RFM_Scores )
+
+ SELECT top 1000 * ,DENSE_RANK() OVER(ORDER BY RFM_AVG_Value desc) AS ranking
+ FROM RFM_ranking
