@@ -1,9 +1,42 @@
 # view shows top 100 customers : 
-
 Create or alter view Top100_customer as
 select top(100) tr.customer_id, cd.gender , CONCAT(Cd.first_name,cd.last_name) FullName , count( tr.transaction_id)as count_of_transactions,
 Row_number() over ( order by count( tr.transaction_id) desc)as Ranks
 from [dbo].[Transactions$] tr join
 [dbo].[CustomerDemographic$] cd on tr.customer_id=cd.customer_id
 where tr.order_status = 'Approved' 
-group by tr.customer_id , CONCAT(Cd.first_name,cd.last_name),cd.gender
+group by tr.customer_id , CONCAT(Cd.first_name,cd.last_name),cd.gender 
+______________________________________________________________________________________________________________________________________________________
+# view shows  number of the transactions per brand:
+create or alter view totalbrand
+as 
+select brand,count(Products$.product_id)as total_transactions 
+from Products$ inner join Transactions$
+on Products$.product_id=Transactions$.product_id
+group by brand
+____________________________________________________________________________________________________________________________________________________
+# function returns the total profits that the company gaind through the last years based on the customer id :
+create or alter function GetTopcustomers(@cid int)
+returns @t table (customer_id int , total_profit money , transtions_count int )
+as
+ BEGIN
+		 INSERT into @t 
+		  select  t.customer_id ,sum(p.list_price - p.standard_cost ) as [total profit] ,count([transaction_id]) as transtions_count
+          from  [dbo].[Transactions$] t join [dbo].[Products$] p  on t.product_id = p.product_id
+		  where @cid = t.customer_id
+          group by t.customer_id 
+          order by [total profit] desc
+	  RETURN
+ end
+______________________________________________________________________________________________________________________________________________________
+# Inline Table-Valued Function to get the online/offline or cancelled/approved orders per each state:
+create or alter function Get_online_offline_orders (@x varchar(50) , @y varchar(50) )
+returns table 
+as
+return
+(select cad.state, max(tr.[transaction_date]) as last_transaction_date ,
+Rank() over ( order by count( tr.order_status) desc)as Ranks , count( tr.order_status) as count_of_orders
+from [dbo].[Transactions$] tr  join [dbo].[CustomerAddress$] cad on tr.customer_id= cad.customer_id
+where tr.order_status = @y and tr.online_order = @x
+group by cad.state )
+
