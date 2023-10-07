@@ -1,0 +1,9 @@
+# view shows top 100 customers : 
+
+Create or alter view Top100_customer as
+select top(100) tr.customer_id, cd.gender , CONCAT(Cd.first_name,cd.last_name) FullName , count( tr.transaction_id)as count_of_transactions,
+Row_number() over ( order by count( tr.transaction_id) desc)as Ranks
+from [dbo].[Transactions$] tr join
+[dbo].[CustomerDemographic$] cd on tr.customer_id=cd.customer_id
+where tr.order_status = 'Approved' 
+group by tr.customer_id , CONCAT(Cd.first_name,cd.last_name),cd.gender
