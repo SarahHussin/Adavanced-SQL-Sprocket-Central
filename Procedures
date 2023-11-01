@@ -1,0 +1,41 @@
+--Update Procedure : 
+
+create or alter proc replace_customer_job @customer_id int ,@job varchar(100)
+as
+begin
+if exists 
+  (
+  select customer_id from [dbo].[CustomerDemographic$] 
+  where  customer_id= @customer_id)
+  update [dbo].[CustomerDemographic$]
+  set  job_title=@job
+  where customer_id=@customer_id
+else 
+print 'customer not found'
+end 
+
+-- Check 
+replace_customer_job  2 , 'It_Help_desk' 
+__________________________________________________________________________________________________________________________________
+
+--Insert Procedure : 
+
+create or alter proc add_product @p_id int , @line varchar(50) , @class varchar(50) , @size varchar(50)
+as
+begin
+insert into [dbo].[Products$] values(@p_id , @line , @class , @size)
+end
+___________________________________________________________________________________________________________________________________
+
+--Delete Procedure : 
+
+create or alter proc delete_customer @id int
+as
+begin
+delete from [dbo].[CustomerDemographic$] where customer_id = @id
+end
+
+
+
+
+
