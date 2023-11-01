@@ -1,10 +1,10 @@
-# RFM Analysis is a marketing technique used to analyze customer behavior based on 3 factors : 
-# R: Recency 
-# F: Frequency
-# M: monetary value
-# And by analyzing these factors, business can gain insights into their customers’ behavior and tailor marketing strategies accordingly.
+--RFM Analysis is a marketing technique used to analyze customer behavior based on 3 factors : 
+--R: Recency 
+--F: Frequency
+--M: monetary value
+--And by analyzing these factors, business can gain insights into their customers’ behavior and tailor marketing strategies accordingly.
 
--- SQL code : 
+--SQL code : 
 declare @today_date as Date = '2018-01-01';
 with cte 
 as
