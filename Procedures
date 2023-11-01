@@ -1,5 +1,5 @@
 --Update Procedure : 
-
+/*
 create or alter proc replace_customer_job @customer_id int ,@job varchar(100)
 as
 begin
@@ -13,7 +13,7 @@ if exists
 else 
 print 'customer not found'
 end 
-
+*/
 -- Check 
 replace_customer_job  2 , 'It_Help_desk' 
 __________________________________________________________________________________________________________________________________
