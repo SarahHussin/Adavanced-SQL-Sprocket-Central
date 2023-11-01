@@ -45,6 +45,4 @@ from [dbo].[Transactions$] tr  join [dbo].[CustomerAddress$] cad on tr.customer_
 where tr.order_status = @y and tr.online_order = @x
 group by cad.state )
 
-```sql
-SELECT * FROM your_table;
-``
+
