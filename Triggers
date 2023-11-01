@@ -1,1 +1,10 @@
-
+```sql
+create or alter trigger t2 on [dbo].[CustomerAddress$]
+after insert,update,delete
+as
+begin
+select * from inserted
+select * from deleted
+end
+```
+________________________________________________________________________________________________________________________________________________________________
