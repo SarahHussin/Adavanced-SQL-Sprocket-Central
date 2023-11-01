@@ -1,4 +1,5 @@
-```sql
+--Trigger select updated data and the old data each time you update in customer address data : 
+
 create or alter trigger t2 on [dbo].[CustomerAddress$]
 after insert,update,delete
 as
@@ -6,5 +7,12 @@ begin
 select * from inserted
 select * from deleted
 end
-```
 ________________________________________________________________________________________________________________________________________________________________
+ --A trigger that prevents users from altering any table in the database:
+
+create or alter trigger prevents_users_from_altering_any_table 
+on database 
+for drop_table 
+as 
+select 'Not allowd to drop table from the database '
+rollback
