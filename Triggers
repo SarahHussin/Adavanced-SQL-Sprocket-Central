@@ -7,7 +7,7 @@ begin
 select * from inserted
 select * from deleted
 end
-________________________________________________________________________________________________________________________________________________________________
+_____________________________________________________________________________________________________________
  --A trigger that prevents users from altering any table in the database:
 
 create or alter trigger prevents_users_from_altering_any_table 
